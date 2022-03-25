@@ -14,35 +14,23 @@ The built-in RegEx module in Godot does NOT support modifiers. All strings
 must properly escape backslashes
 """
 
-const Modifiers := {
-	"GLOBAL_SEARCH": "g",
-	"UNIX_LINES": "d",
-	"CASE_INSENSITIVE": "i",
-	"COMMENTS": "x",
-	"MULTILINE": "m",
-	"DOTALL": "s",
-	"UNICODE_CASE": "u",
-	"UNICODE_CHARACTER_CLASS": "U"
-}
-
-const TO_ESCAPE := "/([\\].|*?+(){}^$\\:=[])/g"
-const LAST_MATCH := "$&"
-const DEFAULT_MODIFIERS := [
-	Modifiers.GLOBAL_SEARCH,
-	Modifiers.MULTILINE
-]
+var _sanitizer_regex := RegEx.new()
 
 var _prefixes := []
 var _source := []
 var _suffixes := []
-var _modifiers := DEFAULT_MODIFIERS
+
+var build_result := OK
 
 ###############################################################################
 # Utils                                                                       #
 ###############################################################################
 
+func _init() -> void:
+	_sanitizer_regex.compile("[\\W]")
+
 func _to_string() -> String:
-	return "/%s/%s" % [_prefixes + _source + _suffixes, _modifiers]
+	return "%s%s%s" % [_build_string(_prefixes), _build_string(_source), _build_string(_suffixes)]
 
 static func _build_string(input: Array) -> String:
 	return PoolStringArray(input).join("")
@@ -53,28 +41,19 @@ static func _push_builder_error(text: String) -> void:
 static func _count_occurrences_of(where: String, what: String) -> int:
 	return (where.length() - where.replace(what, "").length()) / what.length()
 
-static func sanitize(value) -> String:
-	if typeof(value) == TYPE_OBJECT and value.has_method("build"):
-		return value.source()
-	
-	if typeof(value) != TYPE_STRING:
-		push_error("%s cannot be added to builder, adding empty String instead" % str(value))
-		return ""
-	
-	if value.is_valid_integer() or value.is_valid_float():
-		return value
-	
-	return value.replace(TO_ESCAPE, "\\%s" % LAST_MATCH)
+func _sanitize(value) -> String:
+	return _sanitizer_regex.sub(str(value), "\\$0", true)
 
-func clear() -> void:
+func reset() -> void:
 	_prefixes.clear()
 	_source.clear()
 	_suffixes.clear()
-	_modifiers.clear()
-	_modifiers.append_array(DEFAULT_MODIFIERS)
+	# _modifiers.clear()
+	# _modifiers.append_array(DEFAULT_MODIFIERS)
 
-#func replace(subj: String, repl: String, opts: Dictionary = {}) -> String:
-#	return regex().sub(subj, repl, opts.get("all", false), opts.get("offset", 0), opts.get("end", -1))
+func build() -> Reference:
+	build_result = compile(_to_string())
+	return self
 
 ###############################################################################
 # Builder commands                                                            #
@@ -97,7 +76,7 @@ func add(value) -> Reference:
 			_source.append(value)
 		TYPE_OBJECT:
 			if value.has_method("build"):
-				group().add(value.build().to_string()).end_group()
+				group().add(value.to_string()).end_group()
 			else:
 				_push_builder_error(str(value))
 		_:
@@ -152,7 +131,7 @@ func then(value: String) -> Reference:
 	Return:
 		Reference - The builder
 	"""
-	return add("(?:%s)" % sanitize(value))
+	return add("(?:%s)" % _sanitize(value))
 
 func find(value: String) -> Reference:
 	"""
@@ -202,7 +181,7 @@ func anything_but(value: String) -> Reference:
 	Return:
 		Reference - The builder
 	"""
-	return add("(?:[^%s]*)" % sanitize(value))
+	return add("(?:[^%s]*)" % _sanitize(value))
 
 func something() -> Reference:
 	"""
@@ -337,7 +316,7 @@ func any_of(value: String) -> Reference:
 	Return:
 		Reference - The builder
 	"""
-	return add("[%s]" % sanitize(value))
+	return add("[%s]" % _sanitize(value))
 
 func any(value: String) -> Reference:
 	"""
@@ -356,72 +335,73 @@ func RANGE(args: Array) -> Reference:
 	Add an expression to match a range or multiple ranges
 	
 	Params:
-		args: Array[String] - A list of ranges to match
+		args: Array[Variant] - A list of ranges to match, should be castable to String
 	
 	Return:
 		Reference - The builder
 	"""
 	var value := ["["]
 	for i in range(1, args.size(), 2):
-		var from := sanitize(args[i - 1])
-		var to := sanitize(args[i])
+		var from := _sanitize(args[i - 1])
+		var to := _sanitize(args[i])
 		
 		value.append("%s-%s" % [from, to])
+	value.append("]")
 	
 	return add(_build_string(value))
 
-func add_modifier(modifier: String) -> Reference:
-	"""
-	Adds a modifier to the entire expression
+# func add_modifier(modifier: String) -> Reference:
+# 	"""
+# 	Adds a modifier to the entire expression
 	
-	Params:
-		modifier: String - The modifier to add
+# 	Params:
+# 		modifier: String - The modifier to add
 	
-	Return:
-		Reference - The builder
-	"""
-	if not _modifiers.has(modifier):
-		_modifiers.append(modifier)
+# 	Return:
+# 		Reference - The builder
+# 	"""
+# 	if not _modifiers.has(modifier):
+# 		_modifiers.append(modifier)
 	
-	return self
+# 	return self
 
-func remove_modifier(modifier: String) -> Reference:
-	"""
-	Removes a modifier from the entire expression
+# func remove_modifier(modifier: String) -> Reference:
+# 	"""
+# 	Removes a modifier from the entire expression
 	
-	Params:
-		modifier: String - The modifier to remove
+# 	Params:
+# 		modifier: String - The modifier to remove
 	
-	Return:
-		Reference - The builder
-	"""
-	_modifiers.erase(modifier)
+# 	Return:
+# 		Reference - The builder
+# 	"""
+# 	_modifiers.erase(modifier)
 	
-	return self
+# 	return self
 
-func with_any_case(enable: bool = true) -> Reference:
-	"""
-	Enable or disable matching while ignoring case
+# func with_any_case(enable: bool = true) -> Reference:
+# 	"""
+# 	Enable or disable matching while ignoring case
 	
-	Params:
-		enable: bool - Whether or not to ignore case
+# 	Params:
+# 		enable: bool - Whether or not to ignore case
 	
-	Return:
-		Reference - The builder
-	"""
-	return add_modifier(Modifiers.CASE_INSENSITIVE) if enable else remove_modifier(Modifiers.CASE_INSENSITIVE)
+# 	Return:
+# 		Reference - The builder
+# 	"""
+# 	return add_modifier(Modifiers.CASE_INSENSITIVE) if enable else remove_modifier(Modifiers.CASE_INSENSITIVE)
 
-func search_one_line(enable: bool = true) -> Reference:
-	"""
-	Enable or disable matching across multiple lines
+# func search_one_line(enable: bool = true) -> Reference:
+# 	"""
+# 	Enable or disable matching across multiple lines
 	
-	Params:
-		enable: bool - Whether or not to match across multiple lines
+# 	Params:
+# 		enable: bool - Whether or not to match across multiple lines
 	
-	Return:
-		Reference - The builder
-	"""
-	return remove_modifier(Modifiers.MULTILINE) if enable else add_modifier(Modifiers.MULTILINE)
+# 	Return:
+# 		Reference - The builder
+# 	"""
+# 	return remove_modifier(Modifiers.MULTILINE) if enable else add_modifier(Modifiers.MULTILINE)
 
 func multiple(value: String, count: Array = []) -> Reference:
 	"""
@@ -465,7 +445,8 @@ func count(count: Array) -> Reference:
 	Add count of group
 	
 	Params:
-		count: int - The number of occurrences of the previous group in the expression
+		count: Array[Variant] - The number of occurrences of the previous group in the expression, each item
+								should be castable to String
 	
 	Return:
 		Reference - The builder
@@ -474,11 +455,11 @@ func count(count: Array) -> Reference:
 	
 	match count.size():
 		1:
-			_source.append(str(count[0]))
+			_source.append(_sanitize(count[0]))
 		2:
-			_source.append(str(count[0]))
+			_source.append(_sanitize(count[0]))
 			_source.append(",")
-			_source.append(str(count[1]))
+			_source.append(_sanitize(count[1]))
 		_:
 			push_error("Invalid number of arguments for count(...)")
 	
@@ -554,6 +535,15 @@ func one_of(args: Array) -> Reference:
 	return self
 
 func capture(capture_name: String = "") -> Reference:
+	"""
+	Adds named-capture - open brace to the current position and closed to suffixes
+	
+	Params:
+		capture_name: String - Name for the capture
+	
+	Return:
+		Reference - The builder
+	"""
 	_suffixes.append(")")
 	
 	if capture_name.empty():
@@ -561,11 +551,46 @@ func capture(capture_name: String = "") -> Reference:
 	
 	return add("(?<%s>)" % capture_name)
 
+func capt(capture_name: String = "") -> Reference:
+	"""
+	Syntactic sugar for capture(capture_name)
+	
+	Params:
+		capture_name: String - Name for the capture
+	
+	Return:
+		Reference - The builder
+	"""
+	return capture(capture_name)
+
 func group() -> Reference:
+	"""
+	Same as capture(capture_name) but does not save the result
+	May be used to set the count of duplicated captures without creating a new saved capture
+	
+	Returns:
+		Reference - The builder
+	"""
 	_suffixes.append(")")
 	return add("(?:")
 
+func gr() -> Reference:
+	"""
+	Syntactic sugar for group()
+	
+	Returns:
+		Reference - The builder
+	"""
+	return group()
+
 func end_capture() -> Reference:
+	"""
+	Close brace for previous capture and remove las closed brace from suffixes
+	Can be used to continue building the regex after capture or to add multiple captures
+	
+	Returns:
+		Reference - The builder
+	"""
 	if _suffixes.find(")") != -1:
 		_suffixes.resize(_suffixes.size() - 1)
 		return add(")")
@@ -573,5 +598,29 @@ func end_capture() -> Reference:
 		push_error("Cannot end capture group if it has not started")
 		return self
 
+func end_capt() -> Reference:
+	"""
+	Syntactic sugar for end_capture()
+	
+	Returns:
+		Reference - The builder
+	"""
+	return end_capture()
+
 func end_group() -> Reference:
+	"""
+	Syntactic sugar for end_capture()
+	
+	Returns:
+		Reference - The builder
+	"""
+	return end_capture()
+
+func end_gr() -> Reference:
+	"""
+	Syntactic sugar for end_capture()
+	
+	Returns:
+		Reference - The builder
+	"""
 	return end_capture()
