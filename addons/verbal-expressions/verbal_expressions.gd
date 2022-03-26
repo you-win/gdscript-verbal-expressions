@@ -44,12 +44,11 @@ static func _count_occurrences_of(where: String, what: String) -> int:
 func _sanitize(value) -> String:
 	return _sanitizer_regex.sub(str(value), "\\$0", true)
 
-func reset() -> void:
+func clear() -> void:
+	.clear()
 	_prefixes.clear()
 	_source.clear()
 	_suffixes.clear()
-	# _modifiers.clear()
-	# _modifiers.append_array(DEFAULT_MODIFIERS)
 
 func build() -> Reference:
 	build_result = compile(_to_string())
@@ -549,7 +548,7 @@ func capture(capture_name: String = "") -> Reference:
 	if capture_name.empty():
 		return add("(")
 	
-	return add("(?<%s>)" % capture_name)
+	return add("(?<%s>" % capture_name)
 
 func capt(capture_name: String = "") -> Reference:
 	"""
