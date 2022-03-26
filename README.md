@@ -6,6 +6,8 @@ A port of [VerbalExpressions](https://github.com/VerbalExpressions) to GDScript.
 
 Based on the [Java](https://github.com/VerbalExpressions/JavaVerbalExpressions) implementation.
 
+An itch.io demo can be [found here](https://fakefirefly.itch.io/gdscript-verbal-expressions).
+
 ## Quickstart
 1. Copy the `addons/verbal-expressions/` folder to your project's `addons` directory (create the `addons` directory if it doesn't exist)
 2. Load the `verbal_expressions.gd` file in your script and create a new instance of it
