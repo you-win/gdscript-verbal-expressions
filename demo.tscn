@@ -118,21 +118,21 @@ __meta__ = {
 [node name="VSplitContainer" type="VSplitContainer" parent="PanelContainer"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 1570.0
-margin_bottom = 870.0
-split_offset = 510
+margin_right = 994.0
+margin_bottom = 570.0
+split_offset = 275
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HSplitContainer" type="HSplitContainer" parent="PanelContainer/VSplitContainer"]
-margin_right = 1560.0
-margin_bottom = 572.0
+margin_right = 984.0
+margin_bottom = 337.0
 split_offset = 649
 
 [node name="VE" type="VBoxContainer" parent="PanelContainer/VSplitContainer/HSplitContainer"]
 margin_right = 762.0
-margin_bottom = 572.0
+margin_bottom = 337.0
 
 [node name="Label" type="Label" parent="PanelContainer/VSplitContainer/HSplitContainer/VE"]
 margin_right = 762.0
@@ -143,10 +143,10 @@ align = 1
 [node name="Example" type="TextEdit" parent="PanelContainer/VSplitContainer/HSplitContainer/VE"]
 margin_top = 18.0
 margin_right = 762.0
-margin_bottom = 120.0
+margin_bottom = 99.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-size_flags_stretch_ratio = 0.23
+size_flags_stretch_ratio = 0.35
 custom_colors/font_color_readonly = Color( 1, 1, 1, 1 )
 custom_styles/read_only = SubResource( 8 )
 custom_styles/normal = SubResource( 2 )
@@ -156,9 +156,9 @@ text = "var ve = load(
 readonly = true
 
 [node name="TextEdit" type="TextEdit" parent="PanelContainer/VSplitContainer/HSplitContainer/VE"]
-margin_top = 124.0
+margin_top = 103.0
 margin_right = 762.0
-margin_bottom = 572.0
+margin_bottom = 337.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/normal = SubResource( 2 )
@@ -175,24 +175,24 @@ show_line_numbers = true
 
 [node name="Omni" type="VBoxContainer" parent="PanelContainer/VSplitContainer/HSplitContainer"]
 margin_left = 774.0
-margin_right = 1560.0
-margin_bottom = 572.0
+margin_right = 984.0
+margin_bottom = 337.0
 
 [node name="Search" type="VBoxContainer" parent="PanelContainer/VSplitContainer/HSplitContainer/Omni"]
-margin_right = 786.0
-margin_bottom = 572.0
+margin_right = 210.0
+margin_bottom = 337.0
 size_flags_vertical = 3
 
 [node name="Label" type="Label" parent="PanelContainer/VSplitContainer/HSplitContainer/Omni/Search"]
-margin_right = 786.0
+margin_right = 210.0
 margin_bottom = 14.0
 text = "Search string"
 align = 1
 
 [node name="TextEdit" type="TextEdit" parent="PanelContainer/VSplitContainer/HSplitContainer/Omni/Search"]
 margin_top = 18.0
-margin_right = 786.0
-margin_bottom = 572.0
+margin_right = 210.0
+margin_bottom = 337.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/normal = SubResource( 2 )
@@ -235,57 +235,57 @@ size_flags_vertical = 3
 custom_styles/normal = SubResource( 2 )
 
 [node name="Options" type="VSplitContainer" parent="PanelContainer/VSplitContainer"]
-margin_top = 584.0
-margin_right = 1560.0
-margin_bottom = 860.0
-split_offset = 48
+margin_top = 349.0
+margin_right = 984.0
+margin_bottom = 560.0
+split_offset = 20
 
 [node name="Status" type="VBoxContainer" parent="PanelContainer/VSplitContainer/Options"]
-margin_right = 1560.0
-margin_bottom = 86.0
+margin_right = 984.0
+margin_bottom = 58.0
 
 [node name="Label" type="Label" parent="PanelContainer/VSplitContainer/Options/Status"]
-margin_right = 1560.0
+margin_right = 984.0
 margin_bottom = 14.0
 text = "Status"
 align = 1
 
 [node name="TextEdit" type="TextEdit" parent="PanelContainer/VSplitContainer/Options/Status"]
 margin_top = 18.0
-margin_right = 1560.0
-margin_bottom = 86.0
+margin_right = 984.0
+margin_bottom = 58.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/normal = SubResource( 2 )
 
 [node name="VSplitContainer" type="VSplitContainer" parent="PanelContainer/VSplitContainer/Options"]
-margin_top = 98.0
-margin_right = 1560.0
-margin_bottom = 276.0
-split_offset = 69
+margin_top = 70.0
+margin_right = 984.0
+margin_bottom = 211.0
+split_offset = 49
 
 [node name="RawRegex" type="VBoxContainer" parent="PanelContainer/VSplitContainer/Options/VSplitContainer"]
-margin_right = 1560.0
-margin_bottom = 98.0
+margin_right = 984.0
+margin_bottom = 61.0
 
 [node name="Label" type="Label" parent="PanelContainer/VSplitContainer/Options/VSplitContainer/RawRegex"]
-margin_right = 1560.0
+margin_right = 984.0
 margin_bottom = 14.0
 text = "Raw Regex"
 align = 1
 
 [node name="TextEdit" type="TextEdit" parent="PanelContainer/VSplitContainer/Options/VSplitContainer/RawRegex"]
 margin_top = 18.0
-margin_right = 1560.0
-margin_bottom = 98.0
+margin_right = 984.0
+margin_bottom = 61.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/normal = SubResource( 2 )
 
 [node name="HSplitContainer" type="HSplitContainer" parent="PanelContainer/VSplitContainer/Options/VSplitContainer"]
-margin_top = 110.0
-margin_right = 1560.0
-margin_bottom = 178.0
+margin_top = 73.0
+margin_right = 984.0
+margin_bottom = 141.0
 split_offset = 740
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VSplitContainer/Options/VSplitContainer/HSplitContainer"]
@@ -317,11 +317,11 @@ text = "Run"
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="PanelContainer/VSplitContainer/Options/VSplitContainer/HSplitContainer"]
 margin_left = 815.0
-margin_right = 1560.0
+margin_right = 984.0
 margin_bottom = 68.0
 
 [node name="Selector" type="CheckButton" parent="PanelContainer/VSplitContainer/Options/VSplitContainer/HSplitContainer/VBoxContainer2"]
-margin_right = 745.0
+margin_right = 169.0
 margin_bottom = 40.0
 custom_styles/focus = SubResource( 7 )
 pressed = true
@@ -330,7 +330,7 @@ flat = true
 
 [node name="About" type="Button" parent="PanelContainer/VSplitContainer/Options/VSplitContainer/HSplitContainer/VBoxContainer2"]
 margin_top = 44.0
-margin_right = 745.0
+margin_right = 169.0
 margin_bottom = 68.0
 size_flags_horizontal = 3
 size_flags_vertical = 3

@@ -14,11 +14,6 @@ config/name="GDScriptVerbalExpressions"
 run/main_scene="res://demo.tscn"
 config/icon="res://icon.png"
 
-[display]
-
-window/size/width=1600
-window/size/height=900
-
 [editor_plugins]
 
 enabled=PoolStringArray( "res://addons/gut/plugin.cfg" )
