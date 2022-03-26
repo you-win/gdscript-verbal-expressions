@@ -349,59 +349,6 @@ func RANGE(args: Array) -> Reference:
 	
 	return add(_build_string(value))
 
-# func add_modifier(modifier: String) -> Reference:
-# 	"""
-# 	Adds a modifier to the entire expression
-	
-# 	Params:
-# 		modifier: String - The modifier to add
-	
-# 	Return:
-# 		Reference - The builder
-# 	"""
-# 	if not _modifiers.has(modifier):
-# 		_modifiers.append(modifier)
-	
-# 	return self
-
-# func remove_modifier(modifier: String) -> Reference:
-# 	"""
-# 	Removes a modifier from the entire expression
-	
-# 	Params:
-# 		modifier: String - The modifier to remove
-	
-# 	Return:
-# 		Reference - The builder
-# 	"""
-# 	_modifiers.erase(modifier)
-	
-# 	return self
-
-# func with_any_case(enable: bool = true) -> Reference:
-# 	"""
-# 	Enable or disable matching while ignoring case
-	
-# 	Params:
-# 		enable: bool - Whether or not to ignore case
-	
-# 	Return:
-# 		Reference - The builder
-# 	"""
-# 	return add_modifier(Modifiers.CASE_INSENSITIVE) if enable else remove_modifier(Modifiers.CASE_INSENSITIVE)
-
-# func search_one_line(enable: bool = true) -> Reference:
-# 	"""
-# 	Enable or disable matching across multiple lines
-	
-# 	Params:
-# 		enable: bool - Whether or not to match across multiple lines
-	
-# 	Return:
-# 		Reference - The builder
-# 	"""
-# 	return remove_modifier(Modifiers.MULTILINE) if enable else add_modifier(Modifiers.MULTILINE)
-
 func multiple(value: String, count: Array = []) -> Reference:
 	"""
 	Convenience method to show that string usage count is the exact count
